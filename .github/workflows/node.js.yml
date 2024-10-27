@@ -1,0 +1,162 @@
+import React from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+
+const ServiceOperationsDashboard = () => {
+  // Overall Performance Metrics
+  const overallMetrics = {
+    totalCallsMade: 2670,
+    appointmentsBooked: 1073,
+    completed: 812,
+    completionRate: 75.68,
+    pending: 90,
+    onHold: 102,
+    refused: 21,
+    longDistance: 48
+  };
+
+  // City-wise distribution
+  const cityData = [
+    { city: "Gurugram", assigned: 270, completed: 202, pending: 25, onHold: 41 },
+    { city: "Noida", assigned: 31, completed: 30, pending: 1, onHold: 0 },
+    { city: "Hyderabad UNIINFO", assigned: 157, completed: 122, pending: 13, onHold: 11 },
+    { city: "Hyderabad J CHARGE", assigned: 259, completed: 196, pending: 20, onHold: 18 },
+    { city: "Kolkata", assigned: 205, completed: 157, pending: 9, onHold: 14 },
+    { city: "Gautam Buddha Nagar", assigned: 55, completed: 36, pending: 11, onHold: 7 },
+    { city: "Ghaziabad", assigned: 96, completed: 69, pending: 11, onHold: 11 }
+  ];
+
+  // Average Service Engineer Count
+  const engineerData = [
+    { city: "Gurugram", count: 1.5 },
+    { city: "Noida", count: 0.0 },
+    { city: "Hyderabad J CHARGE", count: 3.1 },
+    { city: "Hyderabad UNIINFO", count: 1.7 },
+    { city: "Kolkata", count: 2.1 },
+    { city: "Gautam Buddha Nagar", count: 0.6 },
+    { city: "Ghaziabad", count: 1.1 }
+  ];
+
+  // Colors for charts
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
+  // Status distribution for pie chart
+  const statusData = [
+    { name: 'Completed', value: overallMetrics.completed },
+    { name: 'Pending', value: overallMetrics.pending },
+    { name: 'On Hold', value: overallMetrics.onHold },
+    { name: 'Refused', value: overallMetrics.refused },
+    { name: 'Long Distance', value: overallMetrics.longDistance }
+  ];
+
+  return (
+    <div className="space-y-4">
+      {/* Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Total Calls</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{overallMetrics.totalCallsMade}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Appointments</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{overallMetrics.appointmentsBooked}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Completed</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{overallMetrics.completed}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Completion Rate</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{overallMetrics.completionRate}%</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* City-wise Performance */}
+      <Card>
+        <CardHeader>
+          <CardTitle>City-wise Performance</CardTitle>
+        </CardHeader>
+        <CardContent className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={cityData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="city" angle={-45} textAnchor="end" height={100} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="assigned" fill="#0088FE" name="Assigned" />
+              <Bar dataKey="completed" fill="#00C49F" name="Completed" />
+              <Bar dataKey="pending" fill="#FFBB28" name="Pending" />
+              <Bar dataKey="onHold" fill="#FF8042" name="On Hold" />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* Service Engineer Distribution */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Average Service Engineer Count by City</CardTitle>
+        </CardHeader>
+        <CardContent className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={engineerData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="city" angle={-45} textAnchor="end" height={100} />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="count" fill="#8884d8" name="Avg. Engineers" />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* Status Distribution */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Service Status Distribution</CardTitle>
+        </CardHeader>
+        <CardContent className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={statusData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {statusData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default ServiceOperationsDashboard;
